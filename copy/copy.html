@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>点击复制到剪切板</title>
+</head>
+<body>
+    <!-- 参考：点击复制 https://www.jianshu.com/p/c6d573572c79 -->
+    <div class="type2">
+        <h4>法二:复制内容 在其它html元素上</h4>
+        <span id="target">我是要被点击复制的信息</span>
+        <button class="btn">点击复制</button>
+    </div>
+    
+    <script>
+        function Copy(str){
+            const save = function(e){
+                e.clipboardData.setData('text/plain', str);
+                e.preventDefault();
+            }
+            document.addEventListener('copy', save);
+            document.execCommand('copy');
+            document.removeEventListener('copy',save);
+            alert('复制成功！');
+        }
+        const $div = document.querySelector('.type2')
+        $div.addEventListener('click', function(){
+            const str = document.querySelector('#target').innerText
+            Copy(str);
+        });
+    </script>
+</body>
+</html>
