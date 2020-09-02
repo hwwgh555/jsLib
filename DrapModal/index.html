@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>modal拖动</title>
+        <link rel="stylesheet" type="text/css" href="../css/reset.css">
+        <link rel="stylesheet" type="text/css" href="modal.css">
+        <script>
+            window.onload = function () {
+                let isDragging = false
+                $modal = document.querySelector('.dragModalWrapper')
+                const $titleEle = document.querySelector('.dragModalTitleWrapper')
+
+                let startPageX = 0;
+                let startPageY = 0;
+                let left = 0;
+                let top = 0;
+                $titleEle.addEventListener('mousedown', function(e) {
+                    const eleClientRect = $modal.getBoundingClientRect()
+                    left = eleClientRect.left
+                    top = eleClientRect.top
+                    isDragging = true
+                    startPageX = e.pageX
+                    startPageY = e.pageY
+                })
+                $titleEle.addEventListener('mousemove', function(e) {
+                    console.log('isDragging::', isDragging)
+                    if (!isDragging) return
+ 
+                    // 原生中，应该使用 : ，而不是 =
+                    console.log({
+                        top,
+                        left,
+                        startPageX,
+                        startPageY,
+                        pageX: e.pageX,
+                        pageY: e.pageY,
+                    })
+                    const cssText = `left:${left + (e.pageX - startPageX)}px;top:${top + (e.pageY - startPageY)}px;margin-left:0;`
+                    console.log(cssText)
+                    // debugger
+                    $modal.style.cssText = cssText
+                })
+                $titleEle.addEventListener('mouseup', function(e) {
+                    console.log('up::::')
+                    isDragging = false
+                })
+            }
+        </script>
+    </head>
+    <body>
+        <div class='dragModalWrapper'>
+            <div
+                class='dragModalTitleWrapper'
+            >
+                <div class="dragModalTitle">标题</div>
+                <span class="drapModalClose">X</span>
+            </div>
+            <div>
+                内容区
+            </div>
+        </div>
+    </body>
+</html>
+
+<!-- 
+自己写的过程中遇到的问题：
+1. 参考点理解有偏差：如 const eleClientRect = $modal.getBoundingClientRect() ，写在了move中；
+2. 受到jsx的影响，style的cssText写错
+3. 当前存在总是： 用户拖动时，如果 拖动 区域太少，可能导致 mouseup 没有触发，导致 鼠标在拖动区域时，移动鼠标不能拖动
+ -->
