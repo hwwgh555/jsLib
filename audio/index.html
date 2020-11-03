@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>音频播放控制</title>
+    </head>
+    <body>
+        <!-- 不写controls时，不显示 -->
+        <!-- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio -->
+        <audio
+            controls
+            id="audioTryListen"
+            src="http://sobot.oss-cn-beijing.aliyuncs.com/icall/voice/4b516ea9b3d14bd59e64ad6bdd1fd316/f1d80a425b9940f48f8ba100b16fff40.wav"
+        >
+        </audio>
+        <button id='play'>play</button>
+        <button id='pause'>pause</button>
+        <script>
+            $audio = document.querySelector('#audioTryListen')
+            $play = document.querySelector('#play')
+            $pause = document.querySelector('#pause')
+            
+            $play.addEventListener('click', () => {
+                $audio.play()
+            })
+
+            $pause.addEventListener('click', () => {
+                $audio.pause()
+            })
+
+            $audio.addEventListener('play', () => {
+                console.log('begin-to-play')
+            })
+
+            $audio.addEventListener('ended', () => {
+                console.log('finish')
+            })
+
+            
+        </script>
+    </body>
+</html>
