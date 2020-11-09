@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>在contentEditable元素的光标处插入内容</title>
+    </head>
+    <body>
+        <div id="contentEditable" contentEditable="true">
+            你好
+        </div>
+        <!-- <input type="button" value="其它内容">尾部 -->
+        <br/>
+        <button id="btn" type="button">点击插入</button>
+        <script>
+            // 参考： https://stackoverflow.com/questions/4823691/insert-an-html-element-in-a-contenteditable-element
+            const $container = document.querySelector('#contentEditable')
+            const $btn = document.querySelector('#btn')
+
+            let lastRange = null
+            // $container.addEventListener('focus', () => {
+            //     console.log('focus')
+            //     // Uncaught DOMException: Failed to execute 'getRangeAt' on 'Selection': 0 is not a valid index.
+            //     lastRange = getSelection().getRangeAt(0)
+            // })
+            
+            $container.addEventListener('blur', () => {
+                console.log('blur')
+                lastRange = getSelection().getRangeAt(0)
+            })
+
+            $container.addEventListener('input', () => {
+                console.log('change')
+                lastRange = window.getSelection().getRangeAt(0)
+            })
+
+            $btn.addEventListener('click', function() {
+                // blur函数如果不主动调用，则click会先执行，再执行blur函数，导致range无法获取
+                $container.blur()
+                let range = null
+                if (lastRange) {
+                    range = lastRange
+                } else {
+                    $container.focus()
+                    const selection = window.getSelection()
+                    range = selection.getRangeAt(0)
+                }
+                range.collapse(true) // 1.光标置于 选中文本的最前方 2.阻止多次连续点击时的覆盖问题
+                console.log(range)
+
+                const ipt = document.createElement('input')
+                ipt.type = 'button'
+                ipt.value = '插入的按钮'
+            
+                // selection.removeAllRanges()
+                range.deleteContents()
+                range.insertNode(ipt)
+                // lastRange = 
+            })
+            
+        </script>
+    </body>
+</html>
